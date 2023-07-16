@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import type {PropsWithChildren} from 'react';
 import {
   Button,
+  FlatList,
   Modal,
   Pressable,
   SafeAreaView,
@@ -13,11 +13,18 @@ import {
   View,
 } from 'react-native';
 import Formulario from './src/components/Formulario';
+import Paciente from './src/components/Paciente';
 
 const App = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [pacientes, setPacientes] = useState([]);
+  const [paciente, setPaciente] = useState({});
 
   const nuevaCitaHandler = () => setModalVisible(true);
+
+  const pacienteEditar = id => {
+    const pacienteEditar = pacientes.filter(paciente => paciente.id === id);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,9 +35,33 @@ const App = () => {
       <Pressable onPress={nuevaCitaHandler} style={styles.btnNuevaCita}>
         <Text style={styles.btnTextoNuevaCita}>Nueva Cita</Text>
       </Pressable>
+
+      {pacientes.length === 0 ? (
+        <Text style={styles.noPacientes}>No hay pacientes aun</Text>
+      ) : (
+        <FlatList
+          data={pacientes}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => {
+            return (
+              <Paciente
+                item={item}
+                setModalVisible={setModalVisible}
+                pacienteEditar={pacienteEditar}
+              />
+            );
+          }}
+          style={styles.listado}
+        />
+      )}
+
       <Formulario
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        pacientes={pacientes}
+        setPacientes={setPacientes}
+        paciente={paciente}
+        setPaciente={setPaciente}
       />
     </SafeAreaView>
   );
@@ -64,6 +95,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '900',
     textTransform: 'uppercase',
+  },
+  noPacientes: {
+    marginTop: 40,
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  listado: {
+    marginTop: 50,
+    marginHorizontal: 30,
   },
 });
 
