@@ -24,6 +24,7 @@ const App = () => {
 
   const pacienteEditar = id => {
     const pacienteEditar = pacientes.filter(paciente => paciente.id === id);
+    setPaciente(pacienteEditar[0]);
   };
 
   return (
@@ -48,6 +49,7 @@ const App = () => {
                 item={item}
                 setModalVisible={setModalVisible}
                 pacienteEditar={pacienteEditar}
+                setPaciente={setPaciente}
               />
             );
           }}

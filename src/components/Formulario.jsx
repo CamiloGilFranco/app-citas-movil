@@ -37,7 +37,6 @@ const Formulario = ({
       setTelefono(pacienteObj.telefono);
       setSintomas(pacienteObj.sintomas);
       setFecha(pacienteObj.fecha);
-    } else {
     }
   }, [pacienteObj]);
 
