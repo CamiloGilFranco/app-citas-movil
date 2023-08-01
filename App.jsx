@@ -1,27 +1,52 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
-  Button,
   FlatList,
   Modal,
   Pressable,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
-  View,
 } from 'react-native';
 import Formulario from './src/components/Formulario';
 import Paciente from './src/components/Paciente';
 import InformacionPaciente from './src/components/InformacionPaciente';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [pacientes, setPacientes] = useState([]);
   const [paciente, setPaciente] = useState({});
   const [modalPaciente, setModalPaciente] = useState(false);
+
+  useEffect(() => {
+    const obtenerPacientes = async () => {
+      try {
+        const pacientesStorage = await AsyncStorage.getItem('lista_pacientes');
+
+        setPacientes(pacientesStorage ? JSON.parse(pacientesStorage) : []);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    obtenerPacientes();
+  }, []);
+
+  useEffect(() => {
+    const guardarPacientesStorage = async () => {
+      try {
+        await AsyncStorage.setItem(
+          'lista_pacientes',
+          JSON.stringify(pacientes),
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    guardarPacientesStorage();
+  }, [pacientes]);
 
   const nuevaCitaHandler = () => setModalVisible(true);
 
